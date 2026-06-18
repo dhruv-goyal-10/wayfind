@@ -1,5 +1,5 @@
 import { fetchListings } from '@/lib/listings';
-import { ListingGrid } from '@/components/ListingGrid';
+import { BrowseClient } from '@/components/BrowseClient';
 import { SiteHeader } from '@/components/SiteHeader';
 
 export default async function BrowsePage() {
@@ -12,10 +12,10 @@ export default async function BrowsePage() {
         <div className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight">Find a local service provider</h1>
           <p className="mt-1 text-sm text-gray-600">
-            {listings.length} providers across {new Set(listings.map((l) => l.category)).size} categories.
+            Search and filter across {new Set(listings.map((l) => l.category)).size} categories.
           </p>
         </div>
-        <ListingGrid listings={listings} />
+        <BrowseClient listings={listings} />
       </main>
     </div>
   );
