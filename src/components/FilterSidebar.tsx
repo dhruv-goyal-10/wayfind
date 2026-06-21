@@ -100,9 +100,9 @@ export function FilterSidebar({ filters, onChange, onReset }: Props) {
               onClick={() => onChange({ ...filters, minRating: r })}
               className={
                 'rounded-md px-2.5 py-1 text-xs transition ' +
-                (filters.minRating > r
-                  ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  : 'bg-brand-500 text-white')
+                (filters.minRating === r
+                  ? 'bg-brand-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200')
               }
             >
               {r === 0 ? 'Any' : `${r}+`}
