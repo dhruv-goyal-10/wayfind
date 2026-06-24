@@ -1,13 +1,26 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import type { Listing } from '@/lib/types';
 import { DEFAULT_FILTERS, applyFilters } from '@/lib/filter';
 import { FilterSidebar } from './FilterSidebar';
 import { ListingGrid } from './ListingGrid';
 
+const MapView = dynamic(() => import('./MapView').then((m) => m.MapView), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[70vh] items-center justify-center rounded-xl bg-gray-100 text-sm text-gray-500">
+      Loading map…
+    </div>
+  ),
+});
+
+type View = 'grid' | 'map';
+
 export function BrowseClient({ listings }: { listings: Listing[] }) {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [view, setView] = useState<View>('grid');
 
   const filtered = useMemo(() => applyFilters(listings, filters), [listings, filters]);
 
@@ -19,10 +32,34 @@ export function BrowseClient({ listings }: { listings: Listing[] }) {
         onReset={() => setFilters(DEFAULT_FILTERS)}
       />
       <div className="flex-1">
-        <div className="mb-4 text-sm text-gray-600">
-          {filtered.length} of {listings.length} providers
+        <div className="mb-4 flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            {filtered.length} of {listings.length} providers
+          </div>
+          <div className="inline-flex rounded-md bg-gray-100 p-0.5 text-sm">
+            <button
+              type="button"
+              onClick={() => setView('grid')}
+              className={
+                'rounded px-3 py-1 transition ' +
+                (view === 'grid' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600')
+              }
+            >
+              Grid
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('map')}
+              className={
+                'rounded px-3 py-1 transition ' +
+                (view === 'map' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600')
+              }
+            >
+              Map
+            </button>
+          </div>
         </div>
-        <ListingGrid listings={filtered} />
+        {view === 'grid' ? <ListingGrid listings={filtered} /> : <MapView listings={filtered} />}
       </div>
     </div>
   );
