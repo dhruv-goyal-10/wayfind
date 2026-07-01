@@ -5,6 +5,7 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { ImageGallery } from '@/components/ImageGallery';
 import { Reviews } from '@/components/Reviews';
 import { ContactForm } from '@/components/ContactForm';
+import { FavoriteButton } from '@/components/FavoriteButton';
 
 export default async function ListingDetailPage({ params }: { params: { slug: string } }) {
   const listing = await fetchListingBySlug(params.slug);
@@ -65,8 +66,13 @@ export default async function ListingDetailPage({ params }: { params: { slug: st
 
           <aside className="lg:col-span-1">
             <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/5 lg:sticky lg:top-20">
-              <div className="text-xs uppercase tracking-wide text-gray-500">Contact</div>
-              <div className="mt-1 text-lg font-semibold">{listing.name}</div>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-xs uppercase tracking-wide text-gray-500">Contact</div>
+                  <div className="mt-1 text-lg font-semibold">{listing.name}</div>
+                </div>
+                <FavoriteButton listingId={listing.id} variant="full" />
+              </div>
               <div className="mt-3 space-y-1 text-sm text-gray-600">
                 {listing.phone && <div>📞 {listing.phone}</div>}
                 {listing.website && (

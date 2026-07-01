@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Listing } from '@/lib/types';
+import { FavoriteButton } from './FavoriteButton';
 
 function priceLabel(n: number) {
   return '$'.repeat(n);
@@ -11,8 +12,9 @@ export function ListingCard({ listing }: { listing: Listing }) {
   return (
     <Link
       href={`/listings/${listing.slug}`}
-      className="group block overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5 transition hover:shadow-md"
+      className="group relative block overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5 transition hover:shadow-md"
     >
+      <FavoriteButton listingId={listing.id} />
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
         {cover && (
           <Image
