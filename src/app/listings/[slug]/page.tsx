@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { fetchListingBySlug, fetchReviews } from '@/lib/listings';
@@ -8,14 +9,77 @@ import { Reviews } from '@/components/Reviews';
 import { ContactForm } from '@/components/ContactForm';
 import { FavoriteButton } from '@/components/FavoriteButton';
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const listing = await fetchListingBySlug(params.slug);
+  if (!listing) return { title: 'Not found' };
+
+  const title = `${listing.name} — ${listing.category} in ${listing.city}`;
+  const description = listing.description.length > 160
+    ? listing.description.slice(0, 157) + '…'
+    : listing.description;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/listings/${listing.slug}` },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url: `/listings/${listing.slug}`,
+      images: listing.images.slice(0, 1).map((url) => ({ url })),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: listing.images.slice(0, 1),
+    },
+  };
+}
+
 export default async function ListingDetailPage({ params }: { params: { slug: string } }) {
   const listing = await fetchListingBySlug(params.slug);
   if (!listing) notFound();
 
   const reviews = await fetchReviews(listing.id);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: listing.name,
+    description: listing.description,
+    image: listing.images,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: listing.address ?? undefined,
+      addressLocality: listing.city,
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: listing.latitude,
+      longitude: listing.longitude,
+    },
+    telephone: listing.phone ?? undefined,
+    url: listing.website ?? undefined,
+    priceRange: priceLabel(listing.price_range),
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: listing.rating,
+      reviewCount: listing.review_count,
+    },
+  };
+
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-6 py-8">
         <nav className="mb-4 text-sm text-gray-500">
