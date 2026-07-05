@@ -3,7 +3,10 @@ import { FavoritesProvider } from '@/components/FavoritesProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Wayfind',
+  title: {
+    default: 'Wayfind',
+    template: '%s · Wayfind',
+  },
   description: 'Find a local service provider you can trust.',
 };
 

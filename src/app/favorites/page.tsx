@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ListingGrid } from '@/components/ListingGrid';
+import { SkeletonGrid } from '@/components/SkeletonCard';
 import { useFavorites } from '@/components/FavoritesProvider';
 import { fetchListingsByIds } from '@/lib/listings';
 import type { Listing } from '@/lib/types';
@@ -32,8 +33,8 @@ export default function FavoritesPage() {
           </p>
         </div>
 
-        {loading ? (
-          <div className="py-16 text-center text-sm text-gray-500">Loading your saved listings…</div>
+        {loading && ids.size > 0 ? (
+          <SkeletonGrid count={Math.min(ids.size, 6)} />
         ) : listings.length === 0 ? (
           <div className="rounded-xl bg-white p-10 text-center shadow-sm ring-1 ring-black/5">
             <div className="text-4xl">♡</div>

@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
+import { useFavorites } from './FavoritesProvider';
 
 export function SiteHeader() {
+  const { ids } = useFavorites();
   return (
     <header className="sticky top-0 z-30 border-b border-black/5 bg-white/85 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
@@ -10,7 +14,14 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-6 text-sm text-gray-600">
           <Link href="/" className="hover:text-gray-900">Browse</Link>
-          <Link href="/favorites" className="hover:text-gray-900">Favorites</Link>
+          <Link href="/favorites" className="inline-flex items-center gap-1.5 hover:text-gray-900">
+            Favorites
+            {ids.size > 0 && (
+              <span className="rounded-full bg-brand-500 px-1.5 text-xs font-medium text-white">
+                {ids.size}
+              </span>
+            )}
+          </Link>
         </nav>
       </div>
     </header>

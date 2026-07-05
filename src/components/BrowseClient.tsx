@@ -6,6 +6,7 @@ import type { Listing } from '@/lib/types';
 import { DEFAULT_FILTERS, applyFilters } from '@/lib/filter';
 import { FilterSidebar } from './FilterSidebar';
 import { ListingGrid } from './ListingGrid';
+import { EmptyState } from './EmptyState';
 
 const MapView = dynamic(() => import('./MapView').then((m) => m.MapView), {
   ssr: false,
@@ -59,7 +60,26 @@ export function BrowseClient({ listings }: { listings: Listing[] }) {
             </button>
           </div>
         </div>
-        {view === 'grid' ? <ListingGrid listings={filtered} /> : <MapView listings={filtered} />}
+
+        <div className="transition-opacity duration-200">
+          {filtered.length === 0 ? (
+            <EmptyState
+              action={
+                <button
+                  type="button"
+                  onClick={() => setFilters(DEFAULT_FILTERS)}
+                  className="rounded-md bg-brand-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-brand-600"
+                >
+                  Clear filters
+                </button>
+              }
+            />
+          ) : view === 'grid' ? (
+            <ListingGrid listings={filtered} />
+          ) : (
+            <MapView listings={filtered} />
+          )}
+        </div>
       </div>
     </div>
   );
