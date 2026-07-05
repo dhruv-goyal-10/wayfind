@@ -14,6 +14,7 @@ import { FilterSidebar } from './FilterSidebar';
 import { ListingGrid } from './ListingGrid';
 import { EmptyState } from './EmptyState';
 import { SortDropdown } from './SortDropdown';
+import { Drawer } from './Drawer';
 
 const MapView = dynamic(() => import('./MapView').then((m) => m.MapView), {
   ssr: false,
@@ -26,6 +27,16 @@ const MapView = dynamic(() => import('./MapView').then((m) => m.MapView), {
 
 type View = 'grid' | 'map';
 
+function countActive(f: ReturnType<typeof filtersFromSearchParams>): number {
+  let n = 0;
+  if (f.q) n++;
+  if (f.categories.length) n++;
+  if (f.priceRange[0] !== 1 || f.priceRange[1] !== 4) n++;
+  if (f.minRating) n++;
+  if (f.radiusKm != null) n++;
+  return n;
+}
+
 export function BrowseClient({ listings }: { listings: Listing[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,27 +45,53 @@ export function BrowseClient({ listings }: { listings: Listing[] }) {
     filtersFromSearchParams(new URLSearchParams(searchParams.toString())),
   );
   const [view, setView] = useState<View>('grid');
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     const params = filtersToSearchParams(filters);
     const qs = params.toString();
-    const target = qs ? `/?${qs}` : '/';
-    router.replace(target, { scroll: false });
+    router.replace(qs ? `/?${qs}` : '/', { scroll: false });
   }, [filters, router]);
 
   const filtered = useMemo(() => applyFilters(listings, filters), [listings, filters]);
+  const activeCount = countActive(filters);
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
-      <FilterSidebar
-        filters={filters}
-        onChange={setFilters}
-        onReset={() => setFilters(DEFAULT_FILTERS)}
-      />
+      <div className="hidden lg:block">
+        <FilterSidebar
+          filters={filters}
+          onChange={setFilters}
+          onReset={() => setFilters(DEFAULT_FILTERS)}
+        />
+      </div>
+
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Filters">
+        <FilterSidebar
+          filters={filters}
+          onChange={setFilters}
+          onReset={() => setFilters(DEFAULT_FILTERS)}
+        />
+      </Drawer>
+
       <div className="flex-1">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="text-sm text-gray-600">
-            {filtered.length} of {listings.length} providers
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setDrawerOpen(true)}
+              className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm shadow-sm hover:bg-gray-50 lg:hidden"
+            >
+              <span>Filters</span>
+              {activeCount > 0 && (
+                <span className="rounded-full bg-brand-500 px-1.5 text-xs font-medium text-white">
+                  {activeCount}
+                </span>
+              )}
+            </button>
+            <div className="text-sm text-gray-600">
+              {filtered.length} of {listings.length} providers
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <SortDropdown value={filters.sort} onChange={(sort) => setFilters({ ...filters, sort })} />
