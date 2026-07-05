@@ -6,6 +6,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Link from 'next/link';
 import type { Listing } from '@/lib/types';
+import { priceLabel } from '@/lib/format';
 
 const pinIcon = L.divIcon({
   className: 'wayfind-pin',
@@ -49,7 +50,7 @@ export function MapView({ listings }: { listings: Listing[] }) {
                   {l.name}
                 </Link>
                 <div className="mt-1 text-xs text-gray-600">
-                  ★ {l.rating.toFixed(1)} · {l.review_count} reviews · {'$'.repeat(l.price_range)}
+                  ★ {l.rating.toFixed(1)} · {l.review_count} reviews · {priceLabel(l.price_range)}
                 </div>
               </div>
             </Popup>

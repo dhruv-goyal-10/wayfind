@@ -2,6 +2,7 @@
 
 import type { Filters, PriceRange } from '@/lib/types';
 import { CATEGORIES } from '@/lib/types';
+import { priceLabel } from '@/lib/format';
 
 interface Props {
   filters: Filters;
@@ -74,7 +75,7 @@ export function FilterSidebar({ filters, onChange, onReset }: Props) {
             className="rounded-md border border-gray-200 px-2 py-1"
           >
             {[1, 2, 3, 4].map((n) => (
-              <option key={n} value={n}>{'$'.repeat(n)}</option>
+              <option key={n} value={n}>{priceLabel(n)}</option>
             ))}
           </select>
           <span className="text-gray-400">to</span>
@@ -84,7 +85,7 @@ export function FilterSidebar({ filters, onChange, onReset }: Props) {
             className="rounded-md border border-gray-200 px-2 py-1"
           >
             {[1, 2, 3, 4].map((n) => (
-              <option key={n} value={n}>{'$'.repeat(n)}</option>
+              <option key={n} value={n}>{priceLabel(n)}</option>
             ))}
           </select>
         </div>

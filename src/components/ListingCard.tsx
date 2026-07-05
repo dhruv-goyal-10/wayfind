@@ -1,11 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Listing } from '@/lib/types';
+import { priceLabel } from '@/lib/format';
 import { FavoriteButton } from './FavoriteButton';
-
-function priceLabel(n: number) {
-  return '$'.repeat(n);
-}
 
 export function ListingCard({ listing }: { listing: Listing }) {
   const cover = listing.images[0];
@@ -38,7 +35,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
           </div>
         </div>
         <div className="mt-3 flex items-center justify-between text-sm">
-          <span className="text-gray-500">{priceLabel(listing.price_range)}</span>
+          <span className="font-medium text-gray-700">{priceLabel(listing.price_range)}</span>
           <div className="flex flex-wrap justify-end gap-1">
             {listing.tags.slice(0, 2).map((t) => (
               <span key={t} className="rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700">

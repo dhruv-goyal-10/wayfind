@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { fetchListingBySlug, fetchReviews } from '@/lib/listings';
+import { priceLabel } from '@/lib/format';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ImageGallery } from '@/components/ImageGallery';
 import { Reviews } from '@/components/Reviews';
@@ -35,7 +36,7 @@ export default async function ListingDetailPage({ params }: { params: { slug: st
                 <span>·</span>
                 <span>{listing.review_count} reviews</span>
                 <span>·</span>
-                <span>{'$'.repeat(listing.price_range)}</span>
+                <span>{priceLabel(listing.price_range)}</span>
                 <span>·</span>
                 <span>{listing.city}</span>
               </div>
