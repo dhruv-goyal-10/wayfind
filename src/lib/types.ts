@@ -28,6 +28,8 @@ export interface Review {
   created_at: string;
 }
 
+export type SortKey = 'top' | 'rating' | 'reviews' | 'price-asc' | 'price-desc';
+
 export interface Filters {
   q: string;
   categories: string[];
@@ -35,7 +37,16 @@ export interface Filters {
   minRating: number;
   radiusKm: number | null;
   center: { lat: number; lng: number } | null;
+  sort: SortKey;
 }
+
+export const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
+  { value: 'top', label: 'Most relevant' },
+  { value: 'rating', label: 'Highest rated' },
+  { value: 'reviews', label: 'Most reviewed' },
+  { value: 'price-asc', label: 'Price: low to high' },
+  { value: 'price-desc', label: 'Price: high to low' },
+];
 
 export const CATEGORIES = [
   'Photography',

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { fetchListings } from '@/lib/listings';
 import { BrowseClient } from '@/components/BrowseClient';
 import { SiteHeader } from '@/components/SiteHeader';
@@ -15,7 +16,9 @@ export default async function BrowsePage() {
             Search and filter across {new Set(listings.map((l) => l.category)).size} categories.
           </p>
         </div>
-        <BrowseClient listings={listings} />
+        <Suspense fallback={<div className="text-sm text-gray-500">Loading…</div>}>
+          <BrowseClient listings={listings} />
+        </Suspense>
       </main>
     </div>
   );
