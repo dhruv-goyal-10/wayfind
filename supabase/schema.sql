@@ -44,3 +44,35 @@ create table if not exists reviews (
 );
 
 create index if not exists reviews_listing_idx on reviews (listing_id, created_at desc);
+
+create table if not exists inquiries (
+  id uuid primary key default gen_random_uuid(),
+  listing_id uuid not null references listings(id) on delete cascade,
+  name text not null,
+  email text not null,
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists inquiries_listing_idx on inquiries (listing_id, created_at desc);
+
+-- Row-level security. The frontend uses the anon key; RLS is what keeps
+-- the data honest. Enable it on every table and add explicit policies.
+alter table listings  enable row level security;
+alter table reviews   enable row level security;
+alter table favorites enable row level security;
+alter table inquiries enable row level security;
+
+drop policy if exists "listings are public" on listings;
+create policy "listings are public" on listings for select using (true);
+
+drop policy if exists "reviews are public" on reviews;
+create policy "reviews are public" on reviews for select using (true);
+
+drop policy if exists "anyone can manage a favorites session" on favorites;
+create policy "anyone can manage a favorites session"
+  on favorites for all using (true) with check (true);
+
+drop policy if exists "anyone can create an inquiry" on inquiries;
+create policy "anyone can create an inquiry"
+  on inquiries for insert with check (true);

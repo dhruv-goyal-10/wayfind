@@ -83,7 +83,7 @@ export default async function ListingDetailPage({ params }: { params: { slug: st
                 )}
               </div>
               <div className="my-4 h-px bg-gray-100" />
-              <ContactForm listingName={listing.name} />
+              <ContactForm listingId={listing.id} listingName={listing.name} />
             </div>
           </aside>
         </div>
