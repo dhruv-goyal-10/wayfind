@@ -3,6 +3,8 @@ import { fetchListings } from '@/lib/listings';
 import { BrowseClient } from '@/components/BrowseClient';
 import { SiteHeader } from '@/components/SiteHeader';
 
+export const dynamic = 'force-dynamic';
+
 export default async function BrowsePage() {
   const listings = await fetchListings();
 

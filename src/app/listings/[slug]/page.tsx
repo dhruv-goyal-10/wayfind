@@ -9,6 +9,8 @@ import { Reviews } from '@/components/Reviews';
 import { ContactForm } from '@/components/ContactForm';
 import { FavoriteButton } from '@/components/FavoriteButton';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: {

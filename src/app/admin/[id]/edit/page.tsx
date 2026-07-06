@@ -5,6 +5,7 @@ import { ListingForm } from '@/components/ListingForm';
 import { updateListingAction } from '../../actions';
 
 export const metadata = { title: 'Edit listing' };
+export const dynamic = 'force-dynamic';
 
 export default async function EditListingPage({ params }: { params: { id: string } }) {
   const all = await fetchListings();
