@@ -41,21 +41,30 @@ export function MapView({ listings }: { listings: Listing[] }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
         <FitBounds listings={listings} />
-        {listings.map((l) => (
-          <Marker key={l.id} position={[l.latitude, l.longitude]} icon={pinIcon}>
-            <Popup>
-              <div className="min-w-[180px]">
-                <div className="text-xs uppercase tracking-wide text-gray-500">{l.category}</div>
-                <Link href={`/listings/${l.slug}`} className="font-semibold text-brand-700 hover:underline">
-                  {l.name}
+        {listings.map((l) => {
+          const cover = l.images[0];
+          return (
+            <Marker key={l.id} position={[l.latitude, l.longitude]} icon={pinIcon}>
+              <Popup>
+                <Link href={`/listings/${l.slug}`} className="block w-[220px] no-underline">
+                  {cover && (
+                    <img
+                      src={cover}
+                      alt={l.name}
+                      loading="lazy"
+                      className="mb-2 h-[110px] w-full rounded-md object-cover"
+                    />
+                  )}
+                  <div className="text-[11px] uppercase tracking-wide text-gray-500">{l.category}</div>
+                  <div className="font-semibold text-brand-700 hover:underline">{l.name}</div>
+                  <div className="mt-1 text-xs text-gray-600">
+                    ★ {l.rating.toFixed(1)} · {l.review_count} reviews · {priceLabel(l.price_range)}
+                  </div>
                 </Link>
-                <div className="mt-1 text-xs text-gray-600">
-                  ★ {l.rating.toFixed(1)} · {l.review_count} reviews · {priceLabel(l.price_range)}
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );
