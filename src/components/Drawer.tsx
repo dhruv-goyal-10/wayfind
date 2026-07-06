@@ -26,7 +26,7 @@ export function Drawer({ open, onClose, title, children }: Props) {
   return (
     <div
       className={
-        'fixed inset-0 z-40 lg:hidden ' + (open ? 'pointer-events-auto' : 'pointer-events-none')
+        'fixed inset-0 z-[1000] lg:hidden ' + (open ? 'pointer-events-auto' : 'pointer-events-none')
       }
       aria-hidden={!open}
     >
