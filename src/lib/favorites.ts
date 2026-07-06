@@ -32,16 +32,16 @@ function writeLocal(ids: string[]) {
 }
 
 export async function loadFavorites(): Promise<string[]> {
-  const local = readLocal();
-  if (!isSupabaseConfigured()) return local;
+  if (!isSupabaseConfigured()) return readLocal();
   const supabase = getSupabase()!;
   const sessionId = ensureSessionId();
   const { data, error } = await supabase.from('favorites').select('listing_id').eq('session_id', sessionId);
-  if (error) return local;
+  if (error) return readLocal();
+  // Remote is authoritative — overwrite local so stale IDs (e.g. from a prior
+  // JSON-seed era with non-UUID IDs) get purged on next load.
   const remote = (data ?? []).map((r) => r.listing_id as string);
-  const merged = Array.from(new Set([...local, ...remote]));
-  writeLocal(merged);
-  return merged;
+  writeLocal(remote);
+  return remote;
 }
 
 export async function addFavorite(listingId: string): Promise<void> {

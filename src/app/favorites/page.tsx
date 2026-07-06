@@ -19,6 +19,10 @@ export default function FavoritesPage() {
     setLoading(true);
     fetchListingsByIds(Array.from(ids))
       .then(setListings)
+      .catch((err) => {
+        console.error('Failed to load favorites', err);
+        setListings([]);
+      })
       .finally(() => setLoading(false));
   }, [ready, ids]);
 
